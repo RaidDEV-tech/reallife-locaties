@@ -186,7 +186,7 @@ async function cycle() {
     }
     send('U'); if (i < S.pulls) await wait(S.releaseS * 1000)
   }
-  if (running) log('Vis gevangen ✔')
+  if (running) { log('Vis gevangen ✔'); emit('caught', 1) }
 }
 async function run() {
   try { await ensureWorker() } catch (e) { log('PowerShell fout: ' + e.message); running = false; emit('state', 'stopped'); return }
@@ -324,7 +324,7 @@ function configureAutoUpdates() {
 // ─── Venster & lifecycle ─────────────────────────────────────────────────────
 function createWindow() {
   win = new BrowserWindow({
-    width: 460, height: 780, resizable: false, frame: false, backgroundColor: '#0b1220',
+    width: 1000, height: 660, resizable: false, frame: false, backgroundColor: '#0a1020',
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false }
   })
   win.loadFile(path.join(__dirname, 'src', 'index.html'))
