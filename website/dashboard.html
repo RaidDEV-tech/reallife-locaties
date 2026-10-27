@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="nl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard – Reallife Locaties</title><link rel="stylesheet" href="styles.css">
+<style>body{background:#080f1e;color:#edf3f8;font-family:Inter,system-ui,sans-serif;margin:0}
+.wrap{max-width:1000px;margin:auto;padding:1.5rem}.card{background:rgba(13,22,40,.85);border:1px solid rgba(38,61,90,.65);border-radius:16px;padding:1.2rem;margin-bottom:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.9rem}label{display:block;font-size:.8rem;color:#8fa6c4;margin:.5rem 0 .2rem}
+input[type=range]{width:100%;accent-color:#3b82f6}input[type=number]{width:100%;padding:.5rem;border-radius:8px;border:1px solid #263d5a;background:#0b1424;color:#fff}
+.top{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}.tag{background:#16294a;border-radius:20px;padding:.2rem .7rem;font-size:.8rem}[hidden]{display:none!important}h2{margin:.2rem 0 .6rem;font-size:1rem}
+a.btn,button.btn{display:inline-block;padding:.7rem 1.1rem;border-radius:10px;background:#3b82f6;color:#fff;border:0;font-weight:600;cursor:pointer;text-decoration:none}</style></head><body>
+<div class="wrap">
+<div class="top"><h1>Dashboard</h1><div><a class="btn" href="downloads.html" style="background:#16294a">Download loader</a> <button class="btn" id="out" hidden style="background:#374151">Uitloggen</button></div></div>
+<div class="card" id="login" hidden style="text-align:center"><h2>Log in met Discord</h2><p style="color:#8fa6c4">Gebruik hetzelfde Discord-account dat je in de loader hebt gekoppeld. Je hebt geen key nodig op de website.</p><a class="btn" href="/auth/discord">Inloggen met Discord</a></div>
+<div id="main" hidden>
+ <div class="card"><div class="top"><div><h2 id="nm"></h2><span id="ks"></span></div><a class="btn" href="/remote">📱 Remote op telefoon</a></div></div>
+ <div class="card"><div class="top"><h2>Instellingen (synchroon met de loader)</h2><span id="sv" class="tag">Opgeslagen</span></div><div class="grid" id="sets"></div></div>
+ <div class="card"><h2>Remote &amp; fast-quit</h2><p style="color:#8fa6c4;font-size:.9rem">Zet in de loader onder Remote toegang aan en vul de koppelcode in op <b>/remote</b>. Daar vind je het scherm met zo hoog mogelijke fps, camera-joystick, toetsenbord en de <b>Fast-quit</b> knop (F8 → quit → Enter). Stoppen kan altijd met Ctrl+Shift+F12 op je pc.</p></div>
+</div></div>
+<script>
+const $=i=>document.getElementById(i);let S={},T
+const F=[['holdS','Vasthouden (s)',1,10,.5],['releaseS','Loslaten (s)',.5,6,.5],['pulls','Aantal trekken',1,15,1],['reactMs','Reactie na melding (ms)',0,3000,50],['timeoutS','Max. wachttijd (s)',10,90,5],['rodSlot','Hengel slot',1,5,1],['baitSlot','Aas slot',1,5,1],['eatEveryMin','Eten/drinken elke (min)',5,120,5],['eatCount','Keer eten',0,10,1],['drinkCount','Keer drinken',0,10,1],['eatSlot','Eten slot',1,5,1],['drinkSlot','Drinken slot',1,5,1]]
+const D={holdS:4,releaseS:2,pulls:6,reactMs:1000,timeoutS:40,rodSlot:1,baitSlot:2,eatEveryMin:35,eatCount:5,drinkCount:5,eatSlot:5,drinkSlot:4}
+fetch('/api/me').then(r=>r.ok?r.json():null).then(m=>{
+ if(!m){$('login').hidden=false;return}
+ $('main').hidden=false;$('out').hidden=false;$('nm').textContent='Welkom, '+m.name;S={...D,...m.settings}
+ $('ks').innerHTML=m.keys.map(k=>'<span class="tag">'+k.plan+(k.expires?' · tot '+k.expires.slice(0,10):'')+(k.banned?' · geblokkeerd':'')+'</span>').join(' ')
+ F.forEach(([k,l,a,b,st])=>{const d=document.createElement('div');d.innerHTML='<label>'+l+': <b></b></label><input type="range" min="'+a+'" max="'+b+'" step="'+st+'">';const i=d.querySelector('input'),v=d.querySelector('b');i.value=S[k];v.textContent=S[k]
+  i.oninput=()=>{S[k]=+i.value;v.textContent=i.value;clearTimeout(T);$('sv').textContent='Opslaan…';T=setTimeout(async()=>{await fetch('/api/settings',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({settings:S})});$('sv').textContent='Opgeslagen ✓'},500)};$('sets').append(d)})})
+$('out').onclick=async()=>{await fetch('/api/logout',{method:'POST'});location.reload()}
+</script></body></html>

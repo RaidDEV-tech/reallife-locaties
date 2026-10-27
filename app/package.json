@@ -1,0 +1,56 @@
+{
+  "name": "reallife-locaties",
+  "version": "3.0.0",
+  "description": "Reallife Locaties",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64",
+    "release": "electron-builder --win --x64 --publish always"
+  },
+  "build": {
+    "appId": "nl.reallife.locaties",
+    "productName": "Reallife Locaties",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Reallife-Locaties-Setup.exe"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "config.json",
+      "src/**/*"
+    ],
+    "asar": true,
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "JOUW_GITHUB_NAAM",
+        "repo": "reallife-locaties"
+      }
+    ]
+  },
+  "dependencies": {
+    "ws": "^8.17.0",
+    "electron-updater": "^6.3.9"
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3"
+  }
+}

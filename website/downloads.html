@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads – Reallife Locaties</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">RL</div>
+        <div>
+          Reallife Locaties
+          <span>VISASSISTENT</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Loader</a>
+        <a href="functies.html">Functies</a>
+        <a href="downloads.html" class="active">Downloads</a>
+        <a href="faq.html">FAQ</a>
+        <a href="voorwaarden.html">Voorwaarden</a>
+      </nav>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <a href="dashboard.html" class="btn btn-primary">Inloggen ↗</a>
+        <button class="mobile-menu-btn" onclick="document.getElementById('mobileNav').classList.toggle('open')">☰</button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="index.html">Loader</a>
+      <a href="functies.html">Functies</a>
+      <a href="downloads.html">Downloads</a>
+      <a href="faq.html">FAQ</a>
+      <a href="voorwaarden.html">Voorwaarden</a>
+      <a href="dashboard.html">Inloggen</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header" style="text-align:center;">
+      <h1>Downloads</h1>
+      <p>Download de nieuwste loader voor Windows.</p>
+    </div>
+
+    <section class="section" style="padding-top:1rem;">
+      <div class="download-box">
+        <h3>Reallife Locaties Loader</h3>
+        <p>Windows x64 · Apparaatgebonden<br>Nieuwste versie · Directe download</p>
+        <a href="https://github.com/JOUW_GITHUB_NAAM/reallife-locaties/releases/latest/download/Reallife-Locaties-Setup.exe" class="btn btn-lg">Download voor Windows ↓</a>
+      </div>
+
+      <div style="max-width:600px;margin:2.5rem auto 0;background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;">
+        <h3 style="margin-bottom:0.75rem;">Installatie</h3>
+        <ol style="color:var(--text-muted);padding-left:1.25rem;font-size:0.95rem;">
+          <li style="margin-bottom:0.5rem;">Download de loader en open het .exe-bestand.</li>
+          <li style="margin-bottom:0.5rem;">Activeer je licentie met de key die je hebt ontvangen.</li>
+          <li style="margin-bottom:0.5rem;">Koppel je Discord-account.</li>
+          <li>Stel je hotbar en timings in en start met vissen.</li>
+        </ol>
+      </div>
+
+      <div style="max-width:600px;margin:1.5rem auto 0;text-align:center;color:var(--text-muted);font-size:0.9rem;">
+        <p>Heb je problemen? Kijk op de <a href="faq.html" style="color:var(--primary);font-weight:600;">FAQ</a> of open een ticket in <a href="https://discord.gg/DArdVaEZpx" target="_blank" style="color:var(--primary);font-weight:600;">Discord</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        Reallife Locaties
+        <span>The future of Future.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://discord.gg/DArdVaEZpx" target="_blank">Discord ↗</a>
+        <a href="dashboard.html">Dashboard ↗</a>
+        <a href="faq.html">FAQ</a>
+        <a href="voorwaarden.html">Voorwaarden</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

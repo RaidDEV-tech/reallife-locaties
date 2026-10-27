@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Functies – Reallife Locaties</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">RL</div>
+        <div>
+          Reallife Locaties
+          <span>VISASSISTENT</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Loader</a>
+        <a href="functies.html" class="active">Functies</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="faq.html">FAQ</a>
+        <a href="voorwaarden.html">Voorwaarden</a>
+      </nav>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <a href="dashboard.html" class="btn btn-primary">Inloggen ↗</a>
+        <button class="mobile-menu-btn" onclick="document.getElementById('mobileNav').classList.toggle('open')">☰</button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="index.html">Loader</a>
+      <a href="functies.html">Functies</a>
+      <a href="downloads.html">Downloads</a>
+      <a href="faq.html">FAQ</a>
+      <a href="voorwaarden.html">Voorwaarden</a>
+      <a href="dashboard.html">Inloggen</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>Functies</h1>
+      <p>Bekijk de opties of probeer de loader op de homepage.</p>
+      <div style="margin-top:1.25rem;display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <a href="index.html" class="btn btn-primary">Bekijk loader ↗</a>
+        <a href="downloads.html" class="btn btn-outline">Download ↓</a>
+      </div>
+    </div>
+
+    <section class="section" style="padding-top:1rem;">
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Hotbar & startgedrag</h3>
+          <p>Vijf hotbarslots, aparte hengel en aas, direct inwerpen en FiveM bij de start focussen.</p>
+          <div class="feature-meta">▶ 4 instelbare opties</div>
+        </div>
+        <div class="feature-card">
+          <h3>Timing</h3>
+          <p>Stel aanslaan, aas, hengel, inwerpen, toetsduur en scans afzonderlijk in.</p>
+          <div class="feature-meta">▶ 6 instelbare opties</div>
+        </div>
+        <div class="feature-card">
+          <h3>Herstel & failsafe</h3>
+          <p>Geen beet: tien seconden wachten, nieuw aas, hengel selecteren en opnieuw inwerpen. Te laat of lijn gebroken: aas, hengel en inwerpen.</p>
+          <div class="feature-meta">▶ 5 instelbare opties</div>
+        </div>
+        <div class="feature-card">
+          <h3>Eten, drinken & veiligheid</h3>
+          <p>Eén schakelaar voor eten en drinken, standaard aan; uit blijft uit. Automatische HUD-detectie en trim, of handmatige vakken die voorrang houden. Bij 90% aanvullen naar vol, minimaal 7,5 seconden per consumptie.</p>
+          <div class="feature-meta">▶ 14 instelbare opties</div>
+        </div>
+        <div class="feature-card">
+          <h3>Relog on crash</h3>
+          <p>Herstart na een procesafsluiting, standaard 25 seconden wachten, pause-menu controleren, game activeren en via F8 verbinden. Escape annuleert.</p>
+          <div class="feature-meta">▶ 4 instelbare opties</div>
+        </div>
+        <div class="feature-card">
+          <h3>Uiterlijk & privacy</h3>
+          <p>Overlay met huidige actie, wachtstap en volgende stap. Streamproof voor ondersteunde opname-apps en een optioneel Spotify-icoon en vensternaam.</p>
+          <div class="feature-meta">▶ 4 instelbare opties</div>
+        </div>
+        <div class="feature-card">
+          <h3>Geavanceerde beeldherkenning</h3>
+          <p>Pas drempels voor aanslaan, spanning en vangstherkenning aan. Werkt alleen met FiveM op de voorgrond.</p>
+          <div class="feature-meta">▶ 12 instelbare opties</div>
+        </div>
+        <div class="feature-card">
+          <h3>Remote toegang</h3>
+          <p>Bekijk je primaire scherm vanaf je telefoon en bedien toetsenbord, muis en camera via je persoonlijke dashboard. Alleen na lokale toestemming in de loader, Discord-koppeling en een tijdelijke koppelcode. Standaard uit, geen beeldopslag en een zichtbare noodstop op de pc.</p>
+          <div class="feature-meta">▶ Optioneel</div>
+        </div>
+        <div class="feature-card">
+          <h3>Configuraties</h3>
+          <p>Maximaal vijf per Discord-account. Bewaar je hotbar, timings en herkenning onder een naam. Laden, verwijderen en delen via PIN; JSON importeren en exporteren via de website.</p>
+          <div class="feature-meta">▶ Max 5 configs</div>
+        </div>
+        <div class="feature-card">
+          <h3>Licentie & account</h3>
+          <p>Discord koppelen is verplicht. Alleen een Discord-administrator kan je key ontkoppelen. Bekijk geldigheid, sessies, gevangen vissen en vistijd. Een verlopen of gedeactiveerde licentie stopt de assistent.</p>
+          <div class="feature-meta">▶ Discord verplicht</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        Reallife Locaties
+        <span>The future of Future.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://discord.gg/DArdVaEZpx" target="_blank">Discord ↗</a>
+        <a href="dashboard.html">Dashboard ↗</a>
+        <a href="faq.html">FAQ</a>
+        <a href="voorwaarden.html">Voorwaarden</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

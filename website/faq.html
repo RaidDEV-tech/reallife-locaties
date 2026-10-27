@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ – Reallife Locaties</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">RL</div>
+        <div>
+          Reallife Locaties
+          <span>VISASSISTENT</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Loader</a>
+        <a href="functies.html">Functies</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="faq.html" class="active">FAQ</a>
+        <a href="voorwaarden.html">Voorwaarden</a>
+      </nav>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <a href="dashboard.html" class="btn btn-primary">Inloggen ↗</a>
+        <button class="mobile-menu-btn" onclick="document.getElementById('mobileNav').classList.toggle('open')">☰</button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="index.html">Loader</a>
+      <a href="functies.html">Functies</a>
+      <a href="downloads.html">Downloads</a>
+      <a href="faq.html">FAQ</a>
+      <a href="voorwaarden.html">Voorwaarden</a>
+      <a href="dashboard.html">Inloggen</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header" style="text-align:center;">
+      <div class="section-label">Hulp bij je setup</div>
+      <h1>Veelgestelde vragen</h1>
+      <p>Loopt het vissen niet zoals het hoort? Controleer eerst deze instellingen.</p>
+    </div>
+
+    <section class="section" style="padding-top:1rem;">
+      <div class="faq-list">
+        <div class="faq-item open">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            Pakt de macro mijn ID, telefoon of iets anders, of stopt hij de hengel weg?
+            <span style="font-size:1.4rem;transition:0.2s;">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Dit kan gebeuren als automatisch eten en drinken niet goed is ingesteld.</p>
+            <ol style="margin:0.75rem 0 0 1.25rem;">
+              <li>Stop de macro voordat je de instellingen aanpast.</li>
+              <li>Ga in de loader naar <strong>Instellingen</strong> en zet <strong>automatisch eten en drinken (auto-eat)</strong> uit om dit te testen.</li>
+              <li>Wil je auto-eat gebruiken? Controleer dan of de ingestelde hotbarslots echt je <strong>eten en drinken</strong> bevatten, niet je ID of telefoon. Gebruik verschillende slots voor hengel, aas, eten en drinken.</li>
+            </ol>
+            <p style="margin-top:0.75rem;">Controleer ook of je inventory overal op <strong>Modern</strong> staat.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            Hoe zet ik mijn inventory op Modern?
+            <span style="font-size:1.4rem;transition:0.2s;">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Open in FiveM je inventory-instellingen en zorg dat de weergave op <strong>Modern</strong> staat. Dit is nodig voor de automatische HUD-detectie van eten en drinken.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            Slaat de macro niet automatisch aan bij beet?
+            <span style="font-size:1.4rem;transition:0.2s;">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Controleer de timing-instellingen voor aanslaan en de drempels bij Geavanceerde beeldherkenning. Zorg dat FiveM op de voorgrond staat en dat de overlay goed werkt. Probeer de drempels iets te verlagen als de macro te traag reageert.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            De loader start niet of crasht
+            <span style="font-size:1.4rem;transition:0.2s;">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Download de nieuwste versie via de downloadpagina. Sluit de oude loader volledig af voordat je de nieuwe opent. Controleer of Windows Defender of antivirus de loader niet blokkeert.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="max-width:800px;margin:2.5rem auto 0;background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+        <div>
+          <h3 style="margin-bottom:0.35rem;">Nog niet opgelost?</h3>
+          <p style="color:var(--text-muted);font-size:0.95rem;">Open een ticket in Discord. Stuur je loaderversie en een volledige screenshot van de melding mee.</p>
+        </div>
+        <a href="https://discord.gg/DArdVaEZpx" target="_blank" class="btn btn-primary">Hulp via Discord ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        Reallife Locaties
+        <span>The future of Future.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://discord.gg/DArdVaEZpx" target="_blank">Discord ↗</a>
+        <a href="dashboard.html">Dashboard ↗</a>
+        <a href="faq.html">FAQ</a>
+        <a href="voorwaarden.html">Voorwaarden</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

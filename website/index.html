@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reallife Locaties – Visassistent voor Future</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo" aria-label="Reallife Locaties homepage">
+        <img src="assets/reallife-v1.png" alt="Reallife Locaties logo">
+        <div>
+          Reallife Locaties
+          <small>VISASSISTENT</small>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html" class="active">Loader</a>
+        <a href="functies.html">Functies</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="faq.html">FAQ</a>
+        <a href="voorwaarden.html">Voorwaarden</a>
+      </nav>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <a href="dashboard.html" class="btn btn-primary">Inloggen ↗</a>
+        <button class="mobile-menu-btn" onclick="document.getElementById('mobileNav').classList.toggle('open')">☰</button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="index.html">Loader</a>
+      <a href="functies.html">Functies</a>
+      <a href="downloads.html">Downloads</a>
+      <a href="faq.html">FAQ</a>
+      <a href="voorwaarden.html">Voorwaarden</a>
+      <a href="dashboard.html">Inloggen</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="hero-badge">Gemaakt voor Future</div>
+        <h1>The future<br><span class="accent">of Future.</span></h1>
+        <p>Je visassistent voor Future. Automatiseer je vissen, beheer hotbar, timing en herstel – alles via Discord-licenties.</p>
+        <div class="hero-actions">
+          <a href="downloads.html" class="btn btn-primary btn-lg">Download ↓</a>
+          <a href="dashboard.html" class="btn btn-outline btn-lg">Dashboard ↗</a>
+        </div>
+      </div>
+
+      <div class="login-card">
+        <div class="login-card-header">
+          <span>● REALLIFE</span>
+          <span>− ×</span>
+        </div>
+        <div class="login-card-body">
+          <img src="assets/reallife-v1.png" alt="Reallife Locaties" class="logo-small">
+          <h3>Inloggen</h3>
+          <p>Log in met Discord en kies je server.</p>
+          <a href="dashboard.html" class="btn btn-primary">Discord-login proberen</a>
+          <p class="login-note">Echte keys voeg je toe op je accountpagina</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background: var(--bg-alt);">
+      <div class="section-header">
+        <div class="section-label">Zo werkt het</div>
+        <h2>In drie stappen klaar.</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Activeren</h3>
+          <p>Key invullen en Discord koppelen.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Instellen</h3>
+          <p>Jouw hotbar en timing.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Verbinden</h3>
+          <p>Licenties via Discord.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div class="section-label">Download</div>
+        <h2>Begin met de loader.</h2>
+        <p class="lead">Open de loader, activeer je licentie en koppel Discord. Klaar om te vissen.</p>
+      </div>
+      <div style="text-align:center;">
+        <a href="downloads.html" class="btn btn-primary btn-lg">Download voor Windows ↓</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        Reallife Locaties
+        <span>The future of Future.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://discord.gg/DArdVaEZpx" target="_blank">Discord ↗</a>
+        <a href="dashboard.html">Dashboard ↗</a>
+        <a href="faq.html">FAQ</a>
+        <a href="voorwaarden.html">Voorwaarden</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

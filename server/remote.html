@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>FutureRP Fisher — Afstandsbediening</title>
+<style>
+:root{--bg:#0d0714;--c:#171022;--l:#2a1c40;--r:#f43f5e;--p:#8b5cf6;--t:#f3eefb;--m:#9a8bb5}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
+body{background:var(--bg);color:var(--t);font:15px system-ui,sans-serif;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+[hidden]{display:none!important}
+.grad{background:linear-gradient(90deg,var(--r),var(--p))}
+#login{margin:auto;width:min(340px,90%);text-align:center;display:flex;flex-direction:column;gap:14px}
+#login h1{font-size:24px}#login p{color:var(--m)}
+input{width:100%;padding:14px;border-radius:12px;border:1px solid var(--l);background:var(--c);color:var(--t);font:700 24px ui-monospace,monospace;text-align:center;letter-spacing:.3em;outline:0;user-select:text}
+button{border:0;border-radius:11px;color:#fff;background:var(--l);font:600 14px system-ui;padding:11px 13px}button:active{filter:brightness(1.4)}
+button.g{background:linear-gradient(90deg,var(--r),var(--p));padding:14px;font-size:16px}
+#msg{color:var(--r);min-height:18px}
+#ui{flex:1;display:flex;flex-direction:column;min-height:0}
+#scr{flex:1;min-height:0;display:flex;background:#000}canvas{margin:auto;max-width:100%;max-height:100%}
+.row{display:flex;gap:7px;padding:7px;overflow-x:auto;background:var(--c);border-top:1px solid var(--l)}.row button{flex:none;min-width:48px}
+.q{background:linear-gradient(90deg,#be123c,var(--r))!important}
+#joy{position:absolute;left:18px;bottom:112px;width:130px;height:130px;border-radius:50%;background:#8b5cf622;border:2px solid #8b5cf666;touch-action:none}
+#knob{position:absolute;left:35px;top:35px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--r),var(--p));opacity:.9}
+#joy2{position:absolute;right:18px;bottom:112px;width:130px;height:130px;border-radius:50%;background:#3b82f622;border:2px solid #3b82f666;touch-action:none}#knob2{position:absolute;left:35px;top:35px;width:60px;height:60px;border-radius:50%;background:#3b82f6;opacity:.9}
+#txt{display:flex;gap:7px;padding:7px;background:var(--c)}#txt input{font:16px system-ui;letter-spacing:0;text-align:left;padding:10px}
+</style></head><body>
+<div id="login"><div style="font-size:46px">🎣</div><h1>FutureRP Fisher</h1><p>Vul de code in die in de app op je pc staat.</p>
+<input id="code" inputmode="numeric" maxlength="6" placeholder="000000"><button class="g" id="go">Verbinden</button><div id="msg"></div></div>
+<div id="ui" hidden>
+  <div id="scr"><canvas id="cv"></canvas></div>
+  <div id="joy"><div id="knob"></div></div><div id="joy2"><div id="knob2"></div></div>
+  <div id="txt" hidden><input id="t" placeholder="Typ tekst voor op de pc…"><button id="ts" class="g" style="padding:10px 16px">Stuur</button></div>
+  <div class="row"><button class="q" data-m="quit">⏻ Quit</button><button data-k="f8">F8</button><button data-k="enter">Enter</button><button data-k="escape">Esc</button><button data-k="f6">F6</button><button data-k="f7">F7</button><button data-k="space">Spatie</button><button data-k="tab">Tab</button><button id="kb">⌨ Tekst</button></div>
+  <div class="row"><button data-k="f1">F1</button><button data-k="f2">F2</button><button data-k="f3">F3</button><button data-k="f4">F4</button><button data-k="f5">F5</button><button data-k="f9">F9</button><button data-k="f10">F10</button><button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button><button data-k="4">4</button><button data-k="5">5</button><button data-k="e">E</button></div>
+</div>
+<script>
+const $ = (i) => document.getElementById(i); let ws
+const send = (o) => ws && ws.readyState === 1 && ws.send(JSON.stringify(o))
+$('go').onclick = () => {
+  $('msg').textContent = ''
+  ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws')
+  ws.onopen = () => ws.send(JSON.stringify({ role: 'viewer', code: $('code').value }))
+  ws.onmessage = async (e) => {
+    if (typeof e.data === 'string') { const m = JSON.parse(e.data); if (m.t === 'ok') { $('login').hidden = true; $('ui').hidden = false } else if (m.t === 'err') $('msg').textContent = m.msg; return }
+    const bmp = await createImageBitmap(e.data), c = $('cv'); c.width = bmp.width; c.height = bmp.height; c.getContext('2d').drawImage(bmp, 0, 0)
+  }
+  ws.onclose = () => { if (!$('ui').hidden) { $('ui').hidden = true; $('login').hidden = false; $('msg').textContent = 'Verbinding verbroken' } }
+}
+document.querySelectorAll('[data-k]').forEach(b => b.onclick = () => send({ t: 'key', k: b.dataset.k }))
+document.querySelector('[data-m]').onclick = () => { if (confirm('Game afsluiten? (F8 → quit → Enter)')) send({ t: 'macro', n: 'quit' }) }
+$('kb').onclick = () => { $('txt').hidden = !$('txt').hidden }
+$('ts').onclick = () => { send({ t: 'text', s: $('t').value }); $('t').value = '' }
+$('cv').onclick = (e) => { const r = e.target.getBoundingClientRect(); send({ t: 'click', x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height }) }
+// joystick (WASD)
+const J = $('joy'), K = $('knob'); let act = false, last = 0
+function mv(e) {
+  const t = e.touches ? e.touches[0] : e, r = J.getBoundingClientRect(), R = r.width / 2
+  let x = (t.clientX - r.left - R) / R, y = (t.clientY - r.top - R) / R, d = Math.hypot(x, y); if (d > 1) { x /= d; y /= d }
+  K.style.left = 35 + x * 35 + 'px'; K.style.top = 35 + y * 35 + 'px'
+  if (Date.now() - last > 60) { last = Date.now(); send({ t: 'joy', x, y }) }
+}
+const end = () => { act = false; K.style.left = K.style.top = '35px'; send({ t: 'joy', x: 0, y: 0 }) }
+J.addEventListener('touchstart', (e) => { act = true; mv(e); e.preventDefault() }, { passive: false })
+J.addEventListener('touchmove', (e) => { if (act) mv(e); e.preventDefault() }, { passive: false })
+J.addEventListener('touchend', end); J.addEventListener('touchcancel', end)
+// camera-joystick (muisbeweging)
+const J2 = $('joy2'), K2 = $('knob2'); let a2 = false, l2 = 0
+function mv2(e) { const t = e.touches[0], r = J2.getBoundingClientRect(), R = r.width / 2
+  let x = (t.clientX - r.left - R) / R, y = (t.clientY - r.top - R) / R, d = Math.hypot(x, y); if (d > 1) { x /= d; y /= d }
+  K2.style.left = 35 + x * 35 + 'px'; K2.style.top = 35 + y * 35 + 'px'; if (Date.now() - l2 > 50) { l2 = Date.now(); send({ t: 'cam', x, y }) } }
+const e2 = () => { a2 = false; K2.style.left = K2.style.top = '35px'; send({ t: 'cam', x: 0, y: 0 }) }
+J2.addEventListener('touchstart', (e) => { a2 = true; mv2(e); e.preventDefault() }, { passive: false })
+J2.addEventListener('touchmove', (e) => { if (a2) mv2(e); e.preventDefault() }, { passive: false })
+J2.addEventListener('touchend', e2); J2.addEventListener('touchcancel', e2)
+</script></body></html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="nl"><head><meta charset="UTF-8"><title>FutureRP Fisher</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<style>
+:root{--bg:#0d0714;--card:#171022;--line:#2a1c40;--tx:#f3eefb;--mut:#9a8bb5;--g:#f43f5e;--r:#fb7185;--b:#8b5cf6}
+*{box-sizing:border-box;margin:0}
+body{background:radial-gradient(900px 400px at 50% -10%,#4c1d9566,transparent),var(--bg);color:var(--tx);font:14px system-ui,Segoe UI,sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column;user-select:none}
+.bar{height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 16px;-webkit-app-region:drag;font-weight:700}
+.bar i{font-style:normal;color:var(--g);font-size:11px;margin-left:6px;border:1px solid var(--g);border-radius:20px;padding:1px 7px}
+.bar button{-webkit-app-region:no-drag;background:none;border:0;color:var(--mut);width:34px;height:28px;border-radius:6px;font-size:14px;cursor:pointer}
+.bar button:hover{background:var(--line);color:var(--tx)}
+main{flex:1;padding:6px 18px 18px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+main::-webkit-scrollbar{width:6px}main::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+h2{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:10px;font-weight:600}
+[hidden]{display:none!important}
+#lock{justify-content:center;text-align:center;gap:14px}
+#lock .logo{font-size:54px}#lock h1{font-size:24px}#lock p{color:var(--mut)}
+input[type=text]{width:100%;padding:13px;border-radius:10px;border:1px solid var(--line);background:#0f0a1a;color:var(--tx);font:600 16px ui-monospace,Consolas,monospace;text-align:center;letter-spacing:.12em;outline:0;user-select:text}
+input[type=text]:focus{border-color:var(--g)}
+.btn{border:0;border-radius:12px;padding:13px;font:700 15px inherit;font-family:inherit;cursor:pointer;color:#fff;background:linear-gradient(90deg,#f43f5e,#8b5cf6);transition:.15s;width:100%}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn.stop{background:var(--r);color:#fff}.btn.ghost{background:var(--line);color:var(--tx);padding:8px 12px;width:auto;font-size:12px}
+#msg{min-height:18px;color:var(--r);font-size:13px}
+.top{display:flex;align-items:center;justify-content:space-between}
+.st{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--mut)}
+.running .dot{background:var(--g);box-shadow:0 0 0 0 #f43f5e88;animation:p 1.4s infinite}.testing .dot{background:var(--b)}
+@keyframes p{70%{box-shadow:0 0 0 10px #f43f5e00}100%{box-shadow:0 0 0 0 #f43f5e00}}
+.badge{font-size:11px;color:var(--g);background:#f43f5e22;border-radius:20px;padding:3px 10px;font-weight:600}
+.scr{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#0d2238,#0a1626);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.reg{position:absolute;border:2px dashed var(--b);background:#8b5cf622;border-radius:3px;transform:translateY(-50%);transition:.1s}
+.reg.hit{border:2px solid var(--g);background:#f43f5e55}
+.meter{height:8px;background:#0f0a1a;border-radius:8px;margin:10px 0 6px;overflow:hidden}
+.meter div{height:100%;width:0;background:var(--b);border-radius:8px;transition:width .08s}
+.meter.hit div{background:var(--g)}
+.row2{display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-size:12px}
+details summary{cursor:pointer;color:var(--mut);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.set{display:grid;grid-template-columns:1fr 120px 42px;gap:8px;align-items:center;margin-top:10px;font-size:13px}
+.set b{text-align:right;font-variant-numeric:tabular-nums}
+#adm{position:fixed;left:12px;bottom:8px;font-size:11px;color:var(--mut);cursor:pointer;opacity:.6}#adm:hover{opacity:1}
+#am{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;z-index:9}#am>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:420px;max-height:90vh;overflow:auto}
+.kr{display:grid;grid-template-columns:150px 1fr auto auto auto;gap:6px;align-items:center;font-size:12px;padding:5px 0;border-bottom:1px solid var(--line)}.kr code{cursor:pointer;user-select:text}.kr button{background:var(--line);color:var(--tx);border:0;border-radius:6px;padding:3px 7px;font-size:11px;cursor:pointer}
+.mk{display:flex;gap:6px;margin:10px 0}.mk input,.mk select{flex:1;min-width:0;padding:7px;border-radius:8px;border:1px solid var(--line);background:#0f0a1a;color:var(--tx)}
+.rbn{background:#f43f5e22;border:1px solid var(--g);color:#fda4af;border-radius:8px;padding:6px 10px;font-size:12px;margin-top:8px}
+input[type=range]{accent-color:var(--g);width:100%}
+#log{height:110px;overflow:auto;font:12px ui-monospace,Consolas,monospace;color:var(--mut);line-height:1.6;user-select:text}
+#log div b{color:#6b5a8a;font-weight:400;margin-right:6px}
+.keys{text-align:center;color:var(--mut);font-size:12px}kbd{background:var(--line);border-radius:5px;padding:1px 6px;color:var(--tx)}
+</style></head><body>
+<div class="bar"><span>🎣 FutureRP Fisher<i>v3</i></span><div><button onclick="af.win('min')">—</button><button onclick="af.win('close')">✕</button></div></div>
+
+<main id="lock" hidden>
+  <div class="logo">🔑</div><h1>Activeer FutureRP Fisher</h1><p>Vul je licentiekey in. Een key werkt op maar één apparaat.</p>
+  <input type="text" id="key" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" spellcheck="false">
+  <button class="btn" id="act">Activeren</button><div id="msg"></div>
+</main>
+
+<main id="link" hidden style="justify-content:center;text-align:center;gap:14px">
+  <div class="logo" style="font-size:54px">🔗</div><h1>Link your Discord</h1><p style="color:var(--mut)">Koppel je Discord-account om te gebruiken. Na bevestiging opent je dashboard automatisch.</p>
+  <button class="btn" id="lk">Discord koppelen</button><div id="lmsg" style="color:var(--r);min-height:18px"></div>
+</main>
+<main id="app" hidden>
+  <div class="card top"><div class="st" id="st"><span class="dot"></span><span id="stt">Gestopt</span></div><span class="badge" id="plan">PRO</span></div>
+  <div style="display:flex;gap:8px"><button class="btn ghost" style="flex:1" onclick="af.dashboard()">🌐 Dashboard</button><button class="btn ghost" style="flex:1;background:#be123c" onclick="if(confirm('Game afsluiten? (F8 → quit → Enter)'))af.fastquit()">⏻ Fast-quit</button></div>
+  <button class="btn" id="go">▶ START <small>(F6)</small></button>
+
+  <div class="card">
+    <h2>Groene balk detectie</h2>
+    <div class="scr"><div class="reg" id="reg"></div></div>
+    <div class="meter" id="meter"><div></div></div>
+    <div class="row2"><span id="mt">0 groene pixels</span><button class="btn ghost" id="test">Test detectie</button></div>
+  </div>
+
+  <div class="card"><h2>Afstandsbediening (jouw telefoon)</h2>
+    <div class="row2"><span id="rtx">Uit — niemand kan meekijken</span><button class="btn ghost" id="rbtn">Aanzetten</button></div>
+    <div id="rinfo" hidden></div></div>
+  <div class="card"><details><summary>⚙ Instellingen</summary><div id="sets"></div></details></div>
+  <div class="card"><h2>Log</h2><div id="log"></div></div>
+  <div class="keys"><kbd>F6</kbd> start/stop &nbsp; <kbd>F7</kbd> noodstop</div>
+</main>
+
+<a id="adm">Admin</a>
+<div id="am" hidden><div>
+  <div id="alogin"><h2>Admin panel</h2><div class="mk"><input type="password" id="apw" placeholder="Wachtwoord"><button class="btn ghost" id="alog">Inloggen</button></div><div id="amsg" style="color:var(--r);font-size:12px"></div></div>
+  <div id="apanel" hidden><h2>Keys beheren</h2>
+    <div class="mk"><input id="kc" type="number" value="1" min="1" max="100" title="Aantal"><select id="kp"><option>lifetime</option><option>maand</option><option>week</option></select><input id="kd" type="number" value="0" min="0" title="Dagen geldig (0 = nooit)"><button class="btn ghost" id="kmake">Maak</button></div>
+    <div id="klist"></div></div>
+  <div style="text-align:right;margin-top:10px"><button class="btn ghost" onclick="$('am').hidden=true">Sluiten</button></div>
+</div></div>
+<script>
+const $ = (i) => document.getElementById(i)
+let S = {}, state = 'stopped'
+const ROWS = [['reactMs','Reactie na melding (ms)',0,3000,50],['ocrY','Meldingsgebied: hoogte-positie %',0,90,1],['ocrW','Meldingsgebied: breedte %',10,80,1],['eatEveryMin','Eten/drinken elke (min)',5,120,5],['eatCount','Keer eten',0,10,1],['drinkCount','Keer drinken',0,10,1],['eatSlot','Eten op slot (1-5)',1,5,1],['drinkSlot','Drinken op slot (1-5)',1,5,1],['holdS','Vasthouden (s)',1,10,.5],['releaseS','Loslaten (s)',.5,6,.5],['pulls','Aantal trekken',1,15,1],['timeoutS','Max. wachttijd (s)',10,90,5],
+  ['rodSlot','Hengel op slot (1-5)',1,5,1],['baitSlot','Aas op slot (1-5)',1,5,1],['regionW','Zoekgebied breedte %',5,80,1],['regionH','Zoekgebied hoogte %',2,30,1],['regionY','Verticale positie %',20,80,1],['minPixels','Gevoeligheid (pixels)',10,600,10]]
+const show = (l) => { $('lock').hidden = !l; $('app').hidden = l; $('link').hidden = true }
+const log = (m) => { const d = document.createElement('div'), t = new Date().toTimeString().slice(0, 8); d.innerHTML = '<b>' + t + '</b>'; d.append(m); const L = $('log'); L.append(d); while (L.children.length > 80) L.firstChild.remove(); L.scrollTop = 1e9 }
+function region() { const r = $('reg'); r.style.width = S.regionW + '%'; r.style.height = S.regionH + '%'; r.style.left = (100 - S.regionW) / 2 + '%'; r.style.top = S.regionY + '%' }
+function buildSets() {
+  $('sets').className = 'set'
+  ROWS.forEach(([k, label, mn, mx, st]) => {
+    const l = document.createElement('span'); l.textContent = label
+    const i = document.createElement('input'); Object.assign(i, { type: 'range', min: mn, max: mx, step: st, value: S[k] })
+    const v = document.createElement('b'); v.textContent = S[k]
+    i.oninput = () => { S[k] = +i.value; v.textContent = i.value; region(); af.set(S) }
+    $('sets').append(l, i, v)
+  })
+  
+}
+function setState(s) {
+  state = s; $('st').className = 'st ' + s
+  $('stt').textContent = { running: 'Bezig met vissen', testing: 'Testmodus', stopped: 'Gestopt' }[s]
+  $('go').className = 'btn' + (s === 'running' ? ' stop' : ''); $('go').innerHTML = s === 'running' ? '■ STOP <small>(F6)</small>' : '▶ START <small>(F6)</small>'
+  $('test').textContent = s === 'testing' ? 'Stop test' : 'Test detectie'
+  if (s !== 'running' && s !== 'testing') meter(0)
+}
+function meter(n) {
+  const hit = n >= S.minPixels
+  $('meter').className = 'meter' + (hit ? ' hit' : ''); $('meter').firstChild.style.width = Math.min(100, n / S.minPixels * 100) + '%'
+  $('reg').classList.toggle('hit', hit); $('mt').textContent = n + ' groene pixels' + (hit ? ' — BALK GEZIEN' : '')
+}
+async function boot() {
+  const r = await af.init(); S = r.settings
+  if (r.licensed && !r.linked) needLink(r.info); else if (r.licensed) enter(r.info); else show(true)
+}
+let pend = null
+function needLink(info) { pend = info; $('lock').hidden = true; $('app').hidden = true; $('link').hidden = false }
+$('lk').onclick = async () => {
+  $('lmsg').textContent = ''; $('lk').textContent = 'Wachten op Discord…'
+  const r = await af.link(); $('lk').textContent = 'Discord koppelen'
+  if (r.ok) { af.dashboard(); enter(pend) } else $('lmsg').textContent = r.msg || 'Koppelen mislukt'
+}
+af.on('settings', (n) => { S = n; $('sets').textContent = ''; buildSets(); region() })
+function enter(info) {
+  show(false); if (!$('sets').children.length) buildSets(); region(); setState('stopped')
+  $('plan').textContent = info ? (info.plan + (info.expires ? ' · tot ' + info.expires.slice(0, 10) : '')).toUpperCase() : 'PRO'
+}
+$('act').onclick = async () => {
+  $('msg').textContent = ''; $('act').textContent = 'Controleren…'
+  const r = await af.activate($('key').value); $('act').textContent = 'Activeren'
+  if (r.ok) (r.linked ? enter(r) : needLink(r)); else $('msg').textContent = r.msg || 'Ongeldige key'
+}
+$('key').onkeydown = (e) => { if (e.key === 'Enter') $('act').click() }
+$('key').oninput = (e) => { let v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 16); e.target.value = v.match(/.{1,4}/g)?.join('-') || '' }
+$('go').onclick = () => (state === 'running' ? af.stop() : af.start())
+$('test').onclick = () => af.test()
+af.on('log', log); af.on('state', setState); af.on('meter', meter)
+af.on('locked', (m) => { show(true); $('msg').textContent = m || 'Activeer eerst een geldige key' })
+af.on('remote', (r) => {
+  $('rbtn').textContent = r.on ? 'Uitzetten' : 'Aanzetten'
+  $('rtx').textContent = r.on ? 'Aan — open /remote op je telefoon' : 'Uit — niemand kan meekijken'
+  $('rinfo').hidden = !r.on
+  if (r.on) $('rinfo').innerHTML = '<div class="rbn">' + (r.viewer ? '● Telefoon is verbonden en bestuurt je pc' : 'Wachten op telefoon…') + ' · Koppelcode: <b style="letter-spacing:.2em">' + r.code + '</b></div>'
+})
+$('rbtn').onclick = () => af.remote()
+$('adm').onclick = () => { $('am').hidden = false }
+$('apw').onkeydown = (e) => { if (e.key === 'Enter') $('alog').click() }
+$('alog').onclick = async () => { const r = await af.adminLogin($('apw').value); if (r.ok) { $('alogin').hidden = true; $('apanel').hidden = false; loadKeys() } else $('amsg').textContent = r.msg || 'Fout' }
+async function loadKeys() {
+  const ks = await af.admin('/api/admin/keys'); $('klist').textContent = ''
+  if (!Array.isArray(ks)) return
+  ks.slice().reverse().forEach((e) => {
+    const d = document.createElement('div'); d.className = 'kr'
+    const c = document.createElement('code'); c.textContent = e.key; c.title = 'Klik om te kopiëren'; c.onclick = () => navigator.clipboard.writeText(e.key)
+    const i = document.createElement('span'); i.textContent = e.plan + (e.expires ? ' · tot ' + e.expires.slice(0, 10) : '') + ' · ' + (e.banned ? '⛔ geblokkeerd' : e.hwid ? '🔒 1 pc' : 'vrij'); d.append(c, i)
+    ;[['reset', 'Reset pc'], ['ban', e.banned ? 'Deblok' : 'Blok'], ['delete', '✕']].forEach(([a, t]) => { const b = document.createElement('button'); b.textContent = t; b.onclick = async () => { await af.admin('/api/admin/keys/' + e.key + '/' + a, {}); loadKeys() }; d.append(b) })
+    $('klist').append(d)
+  })
+}
+$('kmake').onclick = async () => { await af.admin('/api/admin/keys', { count: +$('kc').value, plan: $('kp').value, days: +$('kd').value }); loadKeys() }
+boot()
+</script></body></html>
