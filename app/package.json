@@ -40,7 +40,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "JOUW_GITHUB_NAAM",
+        "owner": "RaidDEV-tech",
         "repo": "reallife-locaties"
       }
     ]
