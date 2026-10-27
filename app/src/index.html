@@ -1,172 +1,89 @@
-<!DOCTYPE html>
-<html lang="nl"><head><meta charset="UTF-8"><title>FutureRP Fisher</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8"><title>Reallife Locaties</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
 <style>
-:root{--bg:#0d0714;--card:#171022;--line:#2a1c40;--tx:#f3eefb;--mut:#9a8bb5;--g:#f43f5e;--r:#fb7185;--b:#8b5cf6}
-*{box-sizing:border-box;margin:0}
-body{background:radial-gradient(900px 400px at 50% -10%,#4c1d9566,transparent),var(--bg);color:var(--tx);font:14px system-ui,Segoe UI,sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column;user-select:none}
-.bar{height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 16px;-webkit-app-region:drag;font-weight:700}
-.bar i{font-style:normal;color:var(--g);font-size:11px;margin-left:6px;border:1px solid var(--g);border-radius:20px;padding:1px 7px}
-.bar button{-webkit-app-region:no-drag;background:none;border:0;color:var(--mut);width:34px;height:28px;border-radius:6px;font-size:14px;cursor:pointer}
-.bar button:hover{background:var(--line);color:var(--tx)}
-main{flex:1;padding:6px 18px 18px;overflow:auto;display:flex;flex-direction:column;gap:12px}
-main::-webkit-scrollbar{width:6px}main::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
-h2{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:10px;font-weight:600}
-[hidden]{display:none!important}
-#lock{justify-content:center;text-align:center;gap:14px}
-#lock .logo{font-size:54px}#lock h1{font-size:24px}#lock p{color:var(--mut)}
-input[type=text]{width:100%;padding:13px;border-radius:10px;border:1px solid var(--line);background:#0f0a1a;color:var(--tx);font:600 16px ui-monospace,Consolas,monospace;text-align:center;letter-spacing:.12em;outline:0;user-select:text}
-input[type=text]:focus{border-color:var(--g)}
-.btn{border:0;border-radius:12px;padding:13px;font:700 15px inherit;font-family:inherit;cursor:pointer;color:#fff;background:linear-gradient(90deg,#f43f5e,#8b5cf6);transition:.15s;width:100%}
-.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
-.btn.stop{background:var(--r);color:#fff}.btn.ghost{background:var(--line);color:var(--tx);padding:8px 12px;width:auto;font-size:12px}
-#msg{min-height:18px;color:var(--r);font-size:13px}
-.top{display:flex;align-items:center;justify-content:space-between}
-.st{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
-.dot{width:11px;height:11px;border-radius:50%;background:var(--mut)}
-.running .dot{background:var(--g);box-shadow:0 0 0 0 #f43f5e88;animation:p 1.4s infinite}.testing .dot{background:var(--b)}
-@keyframes p{70%{box-shadow:0 0 0 10px #f43f5e00}100%{box-shadow:0 0 0 0 #f43f5e00}}
-.badge{font-size:11px;color:var(--g);background:#f43f5e22;border-radius:20px;padding:3px 10px;font-weight:600}
-.scr{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#0d2238,#0a1626);border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.reg{position:absolute;border:2px dashed var(--b);background:#8b5cf622;border-radius:3px;transform:translateY(-50%);transition:.1s}
-.reg.hit{border:2px solid var(--g);background:#f43f5e55}
-.meter{height:8px;background:#0f0a1a;border-radius:8px;margin:10px 0 6px;overflow:hidden}
-.meter div{height:100%;width:0;background:var(--b);border-radius:8px;transition:width .08s}
-.meter.hit div{background:var(--g)}
-.row2{display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-size:12px}
-details summary{cursor:pointer;color:var(--mut);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
-.set{display:grid;grid-template-columns:1fr 120px 42px;gap:8px;align-items:center;margin-top:10px;font-size:13px}
-.set b{text-align:right;font-variant-numeric:tabular-nums}
-#adm{position:fixed;left:12px;bottom:8px;font-size:11px;color:var(--mut);cursor:pointer;opacity:.6}#adm:hover{opacity:1}
-#am{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;z-index:9}#am>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:420px;max-height:90vh;overflow:auto}
-.kr{display:grid;grid-template-columns:150px 1fr auto auto auto;gap:6px;align-items:center;font-size:12px;padding:5px 0;border-bottom:1px solid var(--line)}.kr code{cursor:pointer;user-select:text}.kr button{background:var(--line);color:var(--tx);border:0;border-radius:6px;padding:3px 7px;font-size:11px;cursor:pointer}
-.mk{display:flex;gap:6px;margin:10px 0}.mk input,.mk select{flex:1;min-width:0;padding:7px;border-radius:8px;border:1px solid var(--line);background:#0f0a1a;color:var(--tx)}
-.rbn{background:#f43f5e22;border:1px solid var(--g);color:#fda4af;border-radius:8px;padding:6px 10px;font-size:12px;margin-top:8px}
-input[type=range]{accent-color:var(--g);width:100%}
-#log{height:110px;overflow:auto;font:12px ui-monospace,Consolas,monospace;color:var(--mut);line-height:1.6;user-select:text}
-#log div b{color:#6b5a8a;font-weight:400;margin-right:6px}
-.keys{text-align:center;color:var(--mut);font-size:12px}kbd{background:var(--line);border-radius:5px;padding:1px 6px;color:var(--tx)}
+:root{--bg:#0a1020;--side:#0d1630;--card:#111c3a;--line:#1d2b52;--tx:#e8eefc;--mut:#8fa0c8;--a:#3b82f6;--a2:#60a5fa;--ok:#22c55e}
+*{box-sizing:border-box;margin:0}[hidden]{display:none!important}
+body{background:radial-gradient(900px 500px at 70% -10%,#16295a88,transparent),var(--bg);color:var(--tx);font:13px Inter,Segoe UI,system-ui,sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column;user-select:none}
+.bar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 6px 0 14px;-webkit-app-region:drag;font-size:11px;letter-spacing:.08em;color:var(--mut)}
+.bar b{color:var(--tx)}.bar button{-webkit-app-region:no-drag;background:none;border:0;color:var(--mut);width:34px;height:26px;border-radius:6px;cursor:pointer}.bar button:hover{background:var(--line)}
+.shell{flex:1;display:flex;min-height:0;padding:0 12px 12px;gap:12px}
+aside{width:200px;background:var(--side);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:4px}
+.brand{display:flex;gap:10px;align-items:center;margin-bottom:14px}.brand img{width:42px;height:42px;border-radius:9px;object-fit:cover}.brand b{display:block}.brand small{color:var(--a2);font-size:11px}
+.lbl{color:var(--mut);font-size:10px;letter-spacing:.1em;margin:6px 4px}
+.nav{padding:10px 12px;border-radius:9px;color:var(--mut);cursor:pointer}.nav:hover{background:#16224a}.nav.on{background:#1a2c5e;color:#fff;box-shadow:inset 3px 0 var(--a)}
+.sp{flex:1}.ft{color:var(--mut);font-size:11px;line-height:1.8}.ft kbd{color:var(--tx)}
+.pill{display:inline-flex;gap:6px;align-items:center;background:#0d1630;border:1px solid var(--line);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--mut);margin:6px 0}.pill i{width:7px;height:7px;border-radius:50%;background:var(--mut)}.run .pill i{background:var(--ok)}
+section{flex:1;overflow:auto;padding:2px 6px 10px 2px}section::-webkit-scrollbar{width:6px}section::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}.hd h1{font-size:20px}.hd p{color:var(--mut);margin-top:3px}
+.btn{border:0;border-radius:10px;padding:10px 18px;font:600 13px inherit;font-family:inherit;color:#fff;background:var(--a);cursor:pointer}.btn:hover{filter:brightness(1.12)}.btn.g{background:var(--line)}.btn.red{background:#be123c}.btn.stop{background:#dc2626}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}.card h2{font-size:14px;margin-bottom:2px}.card>p{color:var(--mut);font-size:12px;margin-bottom:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:#0d1630;border:1px solid var(--line);border-radius:12px;padding:12px}.stat small{color:var(--mut);font-size:10px;letter-spacing:.08em}.stat div{font-size:22px;font-weight:700;margin-top:4px}
+.slots{display:flex;gap:8px;margin:6px 0 12px}.slots button{flex:1;padding:10px;border-radius:9px;border:1px solid var(--line);background:#0d1630;color:var(--mut);cursor:pointer}.slots button.on{background:var(--a);color:#fff;border-color:var(--a)}
+.row{display:grid;grid-template-columns:1fr 150px 56px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid #16224a}.row b{text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--a)}
+.tg{display:flex;justify-content:space-between;align-items:center;padding:8px 0}.sw{width:40px;height:22px;border-radius:20px;background:var(--line);position:relative;cursor:pointer}.sw:after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s}.sw.on{background:var(--a)}.sw.on:after{left:21px}
+.meter{height:8px;background:#0d1630;border-radius:8px;margin:10px 0 6px;overflow:hidden}.meter div{height:100%;width:0;background:var(--a);transition:width .08s}.meter.hit div{background:var(--ok)}
+#log{height:120px;overflow:auto;font:12px ui-monospace,Consolas,monospace;color:var(--mut);line-height:1.6;user-select:text}
+.full{flex:1;display:flex;align-items:center;justify-content:center;padding:20px}.modal{width:420px;max-width:92%;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px;text-align:center;box-shadow:0 20px 60px #0008}.modal img{width:92px;height:92px;border-radius:16px;margin-bottom:14px;object-fit:cover}.modal h1{font-size:22px;margin-bottom:6px}.modal p{color:var(--mut);margin-bottom:16px}
+input[type=text]{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#0a1230;color:var(--tx);font:600 14px ui-monospace,Consolas,monospace;text-align:center;letter-spacing:.1em;outline:0;user-select:text;margin-bottom:12px}input[type=text]:focus{border-color:var(--a)}
+.msg{color:#f87171;min-height:18px;margin-top:10px;font-size:12px}.rb{background:#1a2c5e;border:1px solid var(--a);border-radius:9px;padding:8px 12px;margin-top:10px;font-size:12px}
 </style></head><body>
-<div class="bar"><span>🎣 FutureRP Fisher<i>v3</i></span><div><button onclick="af.win('min')">—</button><button onclick="af.win('close')">✕</button></div></div>
+<div class="bar"><span>● <b>REALLIFE</b> / FISHING ASSISTANT</span><div><button onclick="af.win('min')">—</button><button onclick="af.win('close')">✕</button></div></div>
 
-<main id="lock" hidden>
-  <div class="logo">🔑</div><h1>Activeer FutureRP Fisher</h1><p>Vul je licentiekey in. Een key werkt op maar één apparaat.</p>
-  <input type="text" id="key" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" spellcheck="false">
-  <button class="btn" id="act">Activeren</button><div id="msg"></div>
-</main>
+<div class="full" id="lock" hidden><div class="modal"><img src="logo.png"><h1>Redeem jouw licentie.</h1><p>Jouw toegang tot Reallife Locaties.</p>
+<input type="text" id="key" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" spellcheck="false"><button class="btn" style="width:100%" id="act">Activeren</button><div class="msg" id="msg"></div></div></div>
+<div class="full" id="link" hidden><div class="modal"><img src="logo.png"><h1>Link your Discord</h1><p>Koppel eerst je Discord-account om Reallife te gebruiken. Na bevestiging opent je dashboard automatisch.</p>
+<button class="btn" style="width:100%" id="lk">Discord koppelen</button><div class="msg" id="lmsg"></div></div></div>
 
-<main id="link" hidden style="justify-content:center;text-align:center;gap:14px">
-  <div class="logo" style="font-size:54px">🔗</div><h1>Link your Discord</h1><p style="color:var(--mut)">Koppel je Discord-account om te gebruiken. Na bevestiging opent je dashboard automatisch.</p>
-  <button class="btn" id="lk">Discord koppelen</button><div id="lmsg" style="color:var(--r);min-height:18px"></div>
-</main>
-<main id="app" hidden>
-  <div class="card top"><div class="st" id="st"><span class="dot"></span><span id="stt">Gestopt</span></div><span class="badge" id="plan">PRO</span></div>
-  <div style="display:flex;gap:8px"><button class="btn ghost" style="flex:1" onclick="af.dashboard()">🌐 Dashboard</button><button class="btn ghost" style="flex:1;background:#be123c" onclick="if(confirm('Game afsluiten? (F8 → quit → Enter)'))af.fastquit()">⏻ Fast-quit</button></div>
-  <button class="btn" id="go">▶ START <small>(F6)</small></button>
+<div class="shell" id="app" hidden>
+<aside><div class="brand"><img src="logo.png"><div><b>Reallife Locaties</b><small>Fishing Assistant</small></div></div>
+<div class="lbl">WERKRUIMTE</div><div class="nav on" data-p="dash">Dashboard</div><div class="nav" data-p="set">Instellingen</div><div class="nav" data-p="acc">Account</div>
+<div class="sp"></div><div id="stw"><span class="pill"><i></i><span id="stt">Gereed</span></span></div>
+<div class="ft"><kbd>F6</kbd> Start / stop<br><kbd>F7</kbd> Noodstop<br><span style="color:var(--mut)">v3 / Windows x64</span></div></aside>
 
-  <div class="card">
-    <h2>Groene balk detectie</h2>
-    <div class="scr"><div class="reg" id="reg"></div></div>
-    <div class="meter" id="meter"><div></div></div>
-    <div class="row2"><span id="mt">0 groene pixels</span><button class="btn ghost" id="test">Test detectie</button></div>
-  </div>
+<section id="p-dash"><div class="hd"><div><h1>Dashboard</h1><p>Alles voor je volgende fishing-sessie.</p></div><button class="btn go" id="go">Start fishing</button></div>
+<div class="card"><small style="color:var(--a2);letter-spacing:.1em;font-size:10px">JOUW FISHING-WERKRUIMTE</small><h2 style="font-size:18px;margin:6px 0" id="hl">Klaar voor de volgende vangst.</h2><p>Kies je hotbar en druk op F6 om te starten.</p></div>
+<div class="g4" style="margin-bottom:12px"><div class="stat"><small>GEVANGEN</small><div id="sc">0</div></div><div class="stat"><small>SESSIEDUUR</small><div id="sd">00:00:00</div></div><div class="stat"><small>HENGEL / AAS</small><div id="sh">1 / 2</div></div><div class="stat"><small>STATUS</small><div id="ss" style="font-size:16px">Gereed</div></div></div>
+<div class="g2"><div class="card"><h2>Hotbar</h2><p>Elk item krijgt zijn eigen plek.</p><small style="color:var(--mut)">Hengel</small><div class="slots" id="rod"></div><small style="color:var(--mut)">Aas</small><div class="slots" id="bait"></div></div>
+<div class="card"><h2>Live status</h2><p>Je huidige actie.</p><div class="meter" id="meter"><div></div></div><div style="color:var(--mut);font-size:12px;margin-bottom:8px" id="mt">0 groene pixels</div><button class="btn g" id="test" style="padding:7px 12px">Test detectie</button><div id="log" style="margin-top:10px"></div></div></div></section>
 
-  <div class="card"><h2>Afstandsbediening (jouw telefoon)</h2>
-    <div class="row2"><span id="rtx">Uit — niemand kan meekijken</span><button class="btn ghost" id="rbtn">Aanzetten</button></div>
-    <div id="rinfo" hidden></div></div>
-  <div class="card"><details><summary>⚙ Instellingen</summary><div id="sets"></div></details></div>
-  <div class="card"><h2>Log</h2><div id="log"></div></div>
-  <div class="keys"><kbd>F6</kbd> start/stop &nbsp; <kbd>F7</kbd> noodstop</div>
-</main>
+<section id="p-set" hidden><div class="hd"><div><h1>Instellingen</h1><p>Hotbar, startgedrag en timing. Synchroon met je dashboard op de website.</p></div><button class="btn go2" onclick="document.getElementById('go').click()">Start fishing</button></div><div id="sets"></div>
+<div class="card"><button class="btn g" id="reset">Alle instellingen naar standaard</button></div></section>
 
-<a id="adm">Admin</a>
-<div id="am" hidden><div>
-  <div id="alogin"><h2>Admin panel</h2><div class="mk"><input type="password" id="apw" placeholder="Wachtwoord"><button class="btn ghost" id="alog">Inloggen</button></div><div id="amsg" style="color:var(--r);font-size:12px"></div></div>
-  <div id="apanel" hidden><h2>Keys beheren</h2>
-    <div class="mk"><input id="kc" type="number" value="1" min="1" max="100" title="Aantal"><select id="kp"><option>lifetime</option><option>maand</option><option>week</option></select><input id="kd" type="number" value="0" min="0" title="Dagen geldig (0 = nooit)"><button class="btn ghost" id="kmake">Maak</button></div>
-    <div id="klist"></div></div>
-  <div style="text-align:right;margin-top:10px"><button class="btn ghost" onclick="$('am').hidden=true">Sluiten</button></div>
-</div></div>
+<section id="p-acc" hidden><div class="hd"><div><h1>Account</h1><p>Voorkeuren en uitleg.</p></div></div>
+<div class="card"><h2>Remote toegang</h2><p>Alleen jouw Discord-account. Blijft aan tot je stopt of de loader sluit.</p><div class="tg"><span>Scherm en bediening toestaan (telefoon)</span><div class="sw" id="rsw"></div></div><div id="rinfo"></div><p style="margin-top:8px">Ctrl+Shift+F12 = remote noodstop. Geen toegang tot UAC of het Windows-vergrendelscherm.</p></div>
+<div class="card"><h2>Licentie &amp; Discord</h2><p id="lic">—</p><button class="btn g" onclick="af.dashboard()">Mijn dashboard</button></div>
+<div class="card"><h2>Fast-quit</h2><p>Sluit FiveM snel af: F8 → quit → Enter.</p><button class="btn red" onclick="if(confirm('Game afsluiten?'))af.fastquit()">⏻ Fast-quit</button></div></section>
+</div>
+
 <script>
-const $ = (i) => document.getElementById(i)
-let S = {}, state = 'stopped'
-const ROWS = [['reactMs','Reactie na melding (ms)',0,3000,50],['ocrY','Meldingsgebied: hoogte-positie %',0,90,1],['ocrW','Meldingsgebied: breedte %',10,80,1],['eatEveryMin','Eten/drinken elke (min)',5,120,5],['eatCount','Keer eten',0,10,1],['drinkCount','Keer drinken',0,10,1],['eatSlot','Eten op slot (1-5)',1,5,1],['drinkSlot','Drinken op slot (1-5)',1,5,1],['holdS','Vasthouden (s)',1,10,.5],['releaseS','Loslaten (s)',.5,6,.5],['pulls','Aantal trekken',1,15,1],['timeoutS','Max. wachttijd (s)',10,90,5],
-  ['rodSlot','Hengel op slot (1-5)',1,5,1],['baitSlot','Aas op slot (1-5)',1,5,1],['regionW','Zoekgebied breedte %',5,80,1],['regionH','Zoekgebied hoogte %',2,30,1],['regionY','Verticale positie %',20,80,1],['minPixels','Gevoeligheid (pixels)',10,600,10]]
-const show = (l) => { $('lock').hidden = !l; $('app').hidden = l; $('link').hidden = true }
-const log = (m) => { const d = document.createElement('div'), t = new Date().toTimeString().slice(0, 8); d.innerHTML = '<b>' + t + '</b>'; d.append(m); const L = $('log'); L.append(d); while (L.children.length > 80) L.firstChild.remove(); L.scrollTop = 1e9 }
-function region() { const r = $('reg'); r.style.width = S.regionW + '%'; r.style.height = S.regionH + '%'; r.style.left = (100 - S.regionW) / 2 + '%'; r.style.top = S.regionY + '%' }
-function buildSets() {
-  $('sets').className = 'set'
-  ROWS.forEach(([k, label, mn, mx, st]) => {
-    const l = document.createElement('span'); l.textContent = label
-    const i = document.createElement('input'); Object.assign(i, { type: 'range', min: mn, max: mx, step: st, value: S[k] })
-    const v = document.createElement('b'); v.textContent = S[k]
-    i.oninput = () => { S[k] = +i.value; v.textContent = i.value; region(); af.set(S) }
-    $('sets').append(l, i, v)
-  })
-  
-}
-function setState(s) {
-  state = s; $('st').className = 'st ' + s
-  $('stt').textContent = { running: 'Bezig met vissen', testing: 'Testmodus', stopped: 'Gestopt' }[s]
-  $('go').className = 'btn' + (s === 'running' ? ' stop' : ''); $('go').innerHTML = s === 'running' ? '■ STOP <small>(F6)</small>' : '▶ START <small>(F6)</small>'
-  $('test').textContent = s === 'testing' ? 'Stop test' : 'Test detectie'
-  if (s !== 'running' && s !== 'testing') meter(0)
-}
-function meter(n) {
-  const hit = n >= S.minPixels
-  $('meter').className = 'meter' + (hit ? ' hit' : ''); $('meter').firstChild.style.width = Math.min(100, n / S.minPixels * 100) + '%'
-  $('reg').classList.toggle('hit', hit); $('mt').textContent = n + ' groene pixels' + (hit ? ' — BALK GEZIEN' : '')
-}
-async function boot() {
-  const r = await af.init(); S = r.settings
-  if (r.licensed && !r.linked) needLink(r.info); else if (r.licensed) enter(r.info); else show(true)
-}
-let pend = null
-function needLink(info) { pend = info; $('lock').hidden = true; $('app').hidden = true; $('link').hidden = false }
-$('lk').onclick = async () => {
-  $('lmsg').textContent = ''; $('lk').textContent = 'Wachten op Discord…'
-  const r = await af.link(); $('lk').textContent = 'Discord koppelen'
-  if (r.ok) { af.dashboard(); enter(pend) } else $('lmsg').textContent = r.msg || 'Koppelen mislukt'
-}
-af.on('settings', (n) => { S = n; $('sets').textContent = ''; buildSets(); region() })
-function enter(info) {
-  show(false); if (!$('sets').children.length) buildSets(); region(); setState('stopped')
-  $('plan').textContent = info ? (info.plan + (info.expires ? ' · tot ' + info.expires.slice(0, 10) : '')).toUpperCase() : 'PRO'
-}
-$('act').onclick = async () => {
-  $('msg').textContent = ''; $('act').textContent = 'Controleren…'
-  const r = await af.activate($('key').value); $('act').textContent = 'Activeren'
-  if (r.ok) (r.linked ? enter(r) : needLink(r)); else $('msg').textContent = r.msg || 'Ongeldige key'
-}
-$('key').onkeydown = (e) => { if (e.key === 'Enter') $('act').click() }
-$('key').oninput = (e) => { let v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 16); e.target.value = v.match(/.{1,4}/g)?.join('-') || '' }
-$('go').onclick = () => (state === 'running' ? af.stop() : af.start())
-$('test').onclick = () => af.test()
-af.on('log', log); af.on('state', setState); af.on('meter', meter)
-af.on('locked', (m) => { show(true); $('msg').textContent = m || 'Activeer eerst een geldige key' })
-af.on('remote', (r) => {
-  $('rbtn').textContent = r.on ? 'Uitzetten' : 'Aanzetten'
-  $('rtx').textContent = r.on ? 'Aan — open /remote op je telefoon' : 'Uit — niemand kan meekijken'
-  $('rinfo').hidden = !r.on
-  if (r.on) $('rinfo').innerHTML = '<div class="rbn">' + (r.viewer ? '● Telefoon is verbonden en bestuurt je pc' : 'Wachten op telefoon…') + ' · Koppelcode: <b style="letter-spacing:.2em">' + r.code + '</b></div>'
-})
-$('rbtn').onclick = () => af.remote()
-$('adm').onclick = () => { $('am').hidden = false }
-$('apw').onkeydown = (e) => { if (e.key === 'Enter') $('alog').click() }
-$('alog').onclick = async () => { const r = await af.adminLogin($('apw').value); if (r.ok) { $('alogin').hidden = true; $('apanel').hidden = false; loadKeys() } else $('amsg').textContent = r.msg || 'Fout' }
-async function loadKeys() {
-  const ks = await af.admin('/api/admin/keys'); $('klist').textContent = ''
-  if (!Array.isArray(ks)) return
-  ks.slice().reverse().forEach((e) => {
-    const d = document.createElement('div'); d.className = 'kr'
-    const c = document.createElement('code'); c.textContent = e.key; c.title = 'Klik om te kopiëren'; c.onclick = () => navigator.clipboard.writeText(e.key)
-    const i = document.createElement('span'); i.textContent = e.plan + (e.expires ? ' · tot ' + e.expires.slice(0, 10) : '') + ' · ' + (e.banned ? '⛔ geblokkeerd' : e.hwid ? '🔒 1 pc' : 'vrij'); d.append(c, i)
-    ;[['reset', 'Reset pc'], ['ban', e.banned ? 'Deblok' : 'Blok'], ['delete', '✕']].forEach(([a, t]) => { const b = document.createElement('button'); b.textContent = t; b.onclick = async () => { await af.admin('/api/admin/keys/' + e.key + '/' + a, {}); loadKeys() }; d.append(b) })
-    $('klist').append(d)
-  })
-}
-$('kmake').onclick = async () => { await af.admin('/api/admin/keys', { count: +$('kc').value, plan: $('kp').value, days: +$('kd').value }); loadKeys() }
+const $=i=>document.getElementById(i);let S={},state='stopped',caught=0,t0=0,tm
+const G=[['Hotbar & timing','Pas de wachttijden aan op jouw server',[['reactMs','Reactie na melding (ms)',0,3000,50],['timeoutS','Max. wachttijd op melding (s)',10,90,5],['holdS','Vasthouden per trek (s)',1,10,.5],['releaseS','Loslaten tussen trekken (s)',.5,6,.5],['pulls','Aantal trekken',1,15,1]]],
+['Eten, drinken en stoppen','Eten en drinken apart geregeld',[['eatEveryMin','Eten/drinken elke (min)',5,120,5],['eatCount','Keer eten',0,10,1],['drinkCount','Keer drinken',0,10,1],['eatSlot','Eten hotbar-slot',1,5,1],['drinkSlot','Drinken hotbar-slot',1,5,1]],'autoEat'],
+['Spanning (meldingsgebied)','De loader leest de melding "spanning" linksonder en laat dan los',[['ocrY','Hoogte-positie (%)',0,90,1],['ocrW','Breedte (%)',10,80,1]]],
+['Groene balk detectie','Zoekgebied midden op het scherm',[['regionW','Breedte (%)',5,80,1],['regionH','Hoogte (%)',2,30,1],['regionY','Verticale positie (%)',20,80,1],['minPixels','Gevoeligheid (px)',10,400,10]]]]
+const nums=n=>{const s=$(n);s.textContent='';for(let i=1;i<=5;i++){const b=document.createElement('button');b.textContent=i;b.className=S[n==='rod'?'rodSlot':'baitSlot']==i?'on':'';b.onclick=()=>{S[n==='rod'?'rodSlot':'baitSlot']=i;af.set(S);nums('rod');nums('bait');$('sh').textContent=S.rodSlot+' / '+S.baitSlot};s.append(b)}}
+function build(){const c=$('sets');c.textContent='';G.forEach(([t,d,rows,tg])=>{const k=document.createElement('div');k.className='card';k.innerHTML='<h2>'+t+'</h2><p>'+d+'</p>'
+ if(tg){const r=document.createElement('div');r.className='tg';r.innerHTML='<span>Automatisch eten en drinken</span><div class="sw'+(S.autoEat?' on':'')+'"></div>';r.lastChild.onclick=e=>{S.autoEat=!S.autoEat;e.target.classList.toggle('on',S.autoEat);af.set(S)};k.append(r)}
+ rows.forEach(([key,l,a,b,st])=>{const r=document.createElement('div');r.className='row';const i=document.createElement('input');Object.assign(i,{type:'range',min:a,max:b,step:st,value:S[key]});const v=document.createElement('b');v.textContent=S[key];i.oninput=()=>{S[key]=+i.value;v.textContent=i.value;af.set(S)};const s=document.createElement('span');s.textContent=l;r.append(s,i,v);k.append(r)});c.append(k)});nums('rod');nums('bait');$('sh').textContent=S.rodSlot+' / '+S.baitSlot}
+document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('on',x===n));['dash','set','acc'].forEach(p=>$('p-'+p).hidden=p!==n.dataset.p)})
+const log=m=>{const d=document.createElement('div');d.textContent=new Date().toTimeString().slice(0,8)+'  '+m;const L=$('log');L.append(d);while(L.children.length>60)L.firstChild.remove();L.scrollTop=1e9;$('hl').textContent=m}
+function setState(s){state=s;const t={running:'Bezig met vissen',testing:'Testmodus',stopped:'Gereed'}[s];$('stt').textContent=t;$('ss').textContent=t;$('stw').className=s==='running'?'run':'';['go','go2'].forEach(i=>{const e=document.querySelector('.'+i);e.className='btn '+i+(s==='running'?' stop':'');e.textContent=s==='running'?'Stop fishing':'Start fishing'});$('test').textContent=s==='testing'?'Stop test':'Test detectie'
+ clearInterval(tm);if(s==='running'){t0=Date.now();tm=setInterval(()=>{const x=Math.floor((Date.now()-t0)/1e3);$('sd').textContent=[x/3600,x/60%60,x%60].map(n=>String(Math.floor(n)).padStart(2,'0')).join(':')},500)}}
+function meter(n){const h=n>=S.minPixels;$('meter').className='meter'+(h?' hit':'');$('meter').firstChild.style.width=Math.min(100,n/S.minPixels*100)+'%';$('mt').textContent=n+' groene pixels'+(h?' — melding gezien':'')}
+const show=(a)=>{$('lock').hidden=a!=='lock';$('link').hidden=a!=='link';$('app').hidden=a!=='app'};let pend=null
+function enter(i){show('app');build();setState('stopped');$('lic').textContent=i?('Plan: '+i.plan+(i.expires?' · tot '+i.expires.slice(0,10):' · lifetime')+' · Verbonden met Discord'):'Verbonden met Discord'}
+const need=i=>{pend=i;show('link')}
+async function boot(){const r=await af.init();S=r.settings;r.licensed?(r.linked?enter(r.info):need(r.info)):show('lock')}
+$('act').onclick=async()=>{$('msg').textContent='';$('act').textContent='Licentie controleren…';const r=await af.activate($('key').value);$('act').textContent='Activeren';r.ok?(r.linked?enter(r):need(r)):$('msg').textContent=r.msg||'Ongeldige key'}
+$('key').oninput=e=>{let v=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,16);e.target.value=v.match(/.{1,4}/g)?.join('-')||''};$('key').onkeydown=e=>e.key==='Enter'&&$('act').click()
+$('lk').onclick=async()=>{$('lmsg').textContent='';$('lk').textContent='Wachten op Discord…';const r=await af.link();$('lk').textContent='Discord koppelen';if(r.ok){af.dashboard();enter(pend)}else $('lmsg').textContent=r.msg||'Koppelen mislukt'}
+$('go').onclick=()=>state==='running'?af.stop():af.start();$('test').onclick=()=>af.test()
+$('reset').onclick=()=>{if(confirm('Alles terugzetten?')){S={...S,holdS:4,releaseS:2,pulls:6,timeoutS:40,reactMs:1000,eatEveryMin:35,eatCount:5,drinkCount:5,eatSlot:5,drinkSlot:4,regionW:30,regionH:8,regionY:50,minPixels:80,ocrY:55,ocrW:35,autoEat:true,rodSlot:1,baitSlot:2};af.set(S);build()}}
+$('rsw').onclick=()=>af.remote()
+af.on('log',log);af.on('state',setState);af.on('meter',meter);af.on('caught',()=>{$('sc').textContent=++caught});af.on('settings',n=>{S=n;build()})
+af.on('locked',m=>{show('lock');$('msg').textContent=m||'Activeer eerst een geldige key'})
+af.on('remote',r=>{$('rsw').classList.toggle('on',r.on);$('rinfo').innerHTML=r.on?'<div class="rb">'+(r.viewer?'● Telefoon verbonden':'Wachten op telefoon…')+' · Koppelcode: <b style="letter-spacing:.2em">'+r.code+'</b> · open <b>/remote</b> op je telefoon</div>':''})
 boot()
 </script></body></html>
