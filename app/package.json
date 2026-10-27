@@ -37,12 +37,15 @@
       "perMachine": false,
       "runAfterFinish": true
     },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "RaidDEV-tech",
-        "repo": "reallife-locaties"
-      }
+"publish": [
+  {
+    "provider": "github",
+    "owner": "RaidDEV-tech",
+    "repo": "reallife-locaties"
+    "releaseType": "release"
+
+  }
+]
     ]
   },
   "dependencies": {
