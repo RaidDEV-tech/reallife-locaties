@@ -80,7 +80,7 @@ $('act').onclick=async()=>{$('msg').textContent='';$('act').textContent='Licenti
 $('key').oninput=e=>{let v=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,16);e.target.value=v.match(/.{1,4}/g)?.join('-')||''};$('key').addEventListener('keydown',e=>{if(e.key==='Enter')$('act').click()})
 $('lk').onclick=async()=>{$('lmsg').textContent='';$('lk').textContent='Wachten op Discord…';const r=await af.link();$('lk').textContent='Discord koppelen';if(r.ok){af.dashboard();enter(pend)}else $('lmsg').textContent=r.msg||'Koppelen mislukt'}
 $('go').onclick=()=>state==='running'?af.stop():af.start();$('test').onclick=()=>af.test()
-$('reset').onclick=()=>{if(confirm('Alles terugzetten?')){S={...S,holdS:4,releaseS:2,pulls:6,timeoutS:40,reactMs:1000,eatEveryMin:35,eatCount:5,drinkCount:5,eatSlot:5,drinkSlot:4,regionW:30,regionH:8,regionY:50,minPixels:80,ocrY:55,ocrW:35,autoEat:true,rodSlot:1,baitSlot:2};af.set(S);build()}}
+$('reset').onclick=()=>{if(confirm('Alles terugzetten?')){S={...S,holdS:4,releaseS:2,pulls:6,timeoutS:40,reactMs:1000,eatEveryMin:35,eatCount:5,drinkCount:5,eatSlot:5,drinkSlot:4,regionW:30,regionH:8,regionY:50,minPixels:80,ocrY:55,ocrW:35,biteX:35,biteY:33,biteW:30,biteH:16,autoEat:true,rodSlot:1,baitSlot:2};af.set(S);build()}}
 $('rsw').onclick=()=>af.remote()
 af.on('log',log);af.on('state',setState);af.on('meter',meter);af.on('caught',()=>{$('sc').textContent=++caught});af.on('settings',n=>{S=n;build()})
 af.on('locked',m=>{show('lock');$('msg').textContent=m||'Activeer eerst een geldige key'})
