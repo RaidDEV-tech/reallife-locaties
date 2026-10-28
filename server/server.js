@@ -52,8 +52,8 @@ app.get('/auth/discord/callback', async (q, r) => {
   try {
     const tk = await (await fetch('https://discord.com/api/oauth2/token', { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: CFG.cid, client_secret: CFG.secret, grant_type: 'authorization_code', code: q.query.code, redirect_uri: CFG.base + '/auth/discord/callback' }) })).json()
     const d = await (await fetch('https://discord.com/api/users/@me', { headers: { authorization: 'Bearer ' + tk.access_token } })).json()
-    if (!d.id) throw 0
-    const u = db.users[d.id] ||= { id: d.id, settings: {}, sUpdated: 0 }; u.name = d.global_name || d.username; u.avatar = d.avatar
+    if (!tk.access_token) return r.status(400).send('Discord weigert de code: ' + (tk.error_description || tk.error))
+    if (!d.id) throw new Error('geen gebruiker ontvangen')    const u = db.users[d.id] ||= { id: d.id, settings: {}, sUpdated: 0 }; u.name = d.global_name || d.username; u.avatar = d.avatar
     const l = links.get(q.query.state)
     if (l) { const e = find(l.key); if (e) e.discord = d.id; l.token = session(d.id, 'app') }
     else if (!db.keys.some(k => k.discord === d.id)) { save(); return r.status(403).send('Geen licentie gekoppeld aan dit Discord-account. Activeer eerst een key in de loader.') }
