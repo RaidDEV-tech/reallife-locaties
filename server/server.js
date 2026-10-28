@@ -50,8 +50,11 @@ app.get('/api/link/poll', (q, r) => { const l = links.get(q.query.id); r.json(l 
 app.get('/auth/discord', (q, r) => r.redirect('https://discord.com/oauth2/authorize?' + new URLSearchParams({ client_id: CFG.cid, redirect_uri: CFG.base + '/auth/discord/callback', response_type: 'code', scope: 'identify', state: q.query.state || 'web' })))
 app.get('/auth/discord/callback', async (q, r) => {
   try {
-    const tk = await (await fetch('https://discord.com/api/oauth2/token', { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: CFG.cid, client_secret: CFG.secret, grant_type: 'authorization_code', code: q.query.code, redirect_uri: CFG.base + '/auth/discord/callback' }) })).json()
-    const d = await (await fetch('https://discord.com/api/users/@me', { headers: { authorization: 'Bearer ' + tk.access_token } })).json()
+    const UA = { 'User-Agent': 'DiscordBot (' + CFG.base + ', 1.0)' }
+    const dj = async (url, opt) => { const x = await fetch(url, opt), t = await x.text(); try { return JSON.parse(t) } catch { throw new Error('Discord gaf geen JSON (status ' + x.status + '): ' + t.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').slice(0, 160)) } }
+    const tk = await dj('https://discord.com/api/oauth2/token', { method: 'POST', headers: { ...UA, 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: CFG.cid, client_secret: CFG.secret, grant_type: 'authorization_code', code: q.query.code, redirect_uri: CFG.base + '/auth/discord/callback' }) })
+    if (!tk.access_token) throw new Error('Discord weigert de code: ' + (tk.error_description || tk.error || JSON.stringify(tk)))
+    const d = await dj('https://discord.com/api/users/@me', { headers: { ...UA, authorization: 'Bearer ' + tk.access_token } })
     if (!tk.access_token) throw new Error('Discord weigert de code: ' + (tk.error_description || tk.error || JSON.stringify(tk)))
     if (!d.id) throw new Error('Geen gebruiker ontvangen van Discord')
     const u = db.users[d.id] ||= { id: d.id, settings: {}, sUpdated: 0 }; u.name = d.global_name || d.username; u.avatar = d.avatar
