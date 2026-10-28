@@ -59,8 +59,7 @@ app.get('/auth/discord/callback', async (q, r) => {
     else if (!db.keys.some(k => k.discord === d.id)) { save(); return r.status(403).send('Geen licentie gekoppeld aan dit Discord-account. Activeer eerst een key in de loader.') }
     const t = session(d.id, 'web'); save()
     r.setHeader('Set-Cookie', `rl=${t}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`); r.redirect('/dashboard.html')
-  } catch { r.status(400).send('Discord-login mislukt') }
-})
+  } catch (e) { r.status(400).send('Discord-login mislukt: ' + (e && e.message || e)) }})
 
 // ── Dashboard-API (web + app) ──
 app.get('/api/me', (q, r) => {
