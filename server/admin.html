@@ -8,7 +8,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px so
 <div id="ap" hidden>
 <div class="card row"><input id="n" type="number" value="1" min="1" max="100" style="width:70px" title="Aantal">
 <select id="p"><option value="0">Lifetime</option><option value="1">1 dag</option><option value="7">7 dagen</option><option value="30">30 dagen</option><option value="90">90 dagen</option><option value="365">1 jaar</option><option value="c">Eigen aantal dagen…</option></select>
-<input id="nt" placeholder="Notitie (klant)"><button id="mk">Keys genereren</button></div>
+<input id="nt" placeholder="Notitie (klant)"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="nl"> Zonder Discord</label><button id="mk">Keys genereren</button></div>
 <div class="card" id="new" hidden></div>
 <div class="card"><table><thead><tr><th>Key</th><th>Plan</th><th>Status</th><th>Discord</th><th>Notitie</th><th></th></tr></thead><tbody id="t"></tbody></table></div></div>
 <script>
@@ -16,9 +16,9 @@ const $=i=>document.getElementById(i);let T='';
 const api=async(p,b)=>(await fetch(p,{method:b?'POST':'GET',headers:{'content-type':'application/json','x-token':T},body:b?JSON.stringify(b):undefined})).json()
 $('go').onclick=async()=>{const r=await api('/api/admin/login',{password:$('pw').value});if(r.ok){T=r.token;$('lg').hidden=true;$('ap').hidden=false;load()}else $('m').textContent=r.msg}
 $('pw').addEventListener('keydown',e=>{if(e.key==='Enter')$('go').click()})
-$('mk').onclick=async()=>{let d=$('p').value;if(d==='c')d=+prompt('Aantal dagen?')||0;const r=await api('/api/admin/keys',{count:+$('n').value,days:+d,plan:+d?d+' dagen':'lifetime',note:$('nt').value});$('new').hidden=false;$('new').innerHTML='<b>Nieuwe keys (klik om te kopiëren):</b><br>'+r.map(k=>'<code>'+k.key+'</code>').join('<br>');$('new').querySelectorAll('code').forEach(c=>c.onclick=()=>navigator.clipboard.writeText(c.textContent));load()}
+$('mk').onclick=async()=>{let d=$('p').value;if(d==='c')d=+prompt('Aantal dagen?')||0;const r=await api('/api/admin/keys',{count:+$('n').value,days:+d,plan:+d?d+' dagen':'lifetime',note:$('nt').value,nolink:$('nl').checked});$('new').hidden=false;$('new').innerHTML='<b>Nieuwe keys (klik om te kopiëren):</b><br>'+r.map(k=>'<code>'+k.key+'</code>').join('<br>');$('new').querySelectorAll('code').forEach(c=>c.onclick=()=>navigator.clipboard.writeText(c.textContent));load()}
 async function load(){const ks=await api('/api/admin/keys');$('t').textContent='';ks.slice().reverse().forEach(k=>{const tr=document.createElement('tr'),st=k.banned?'⛔ geblokkeerd':k.expires?(Date.parse(k.expires)<Date.now()?'verlopen':'tot '+k.expires.slice(0,10)):(k.days?k.days+'d (start bij gebruik)':'lifetime')+(k.hwid?' · 🔒 1 pc':' · vrij')
-tr.innerHTML='<td><code>'+k.key+'</code></td><td></td><td></td><td></td><td></td><td></td>';const c=tr.children;c[1].textContent=k.plan;c[2].textContent=st;c[3].textContent=k.discordName||(k.discord?'gekoppeld':'—');c[4].textContent=k.note||''
+tr.innerHTML='<td><code>'+k.key+'</code></td><td></td><td></td><td></td><td></td><td></td>';const c=tr.children;c[1].textContent=k.plan;c[2].textContent=st;c[3].textContent=k.nolink?'niet nodig':(k.discordName||(k.discord?'gekoppeld':'—'));c[4].textContent=k.note||''
 c[0].firstChild.onclick=()=>navigator.clipboard.writeText(k.key)
 ;[['reset','Reset pc'],['unlink','Ontkoppel'],['ban',k.banned?'Deblok':'Blok'],['extend','+dagen'],['delete','✕']].forEach(([a,t])=>{const b=document.createElement('button');b.className='g';b.textContent=t;b.style.marginRight='4px';b.onclick=async()=>{let body={};if(a==='extend'){body.days=+prompt('Hoeveel dagen erbij?','30');if(!body.days)return}if(a==='delete'&&!confirm('Verwijderen?'))return;await api('/api/admin/keys/'+k.key+'/'+a,body);load()};c[5].append(b)});$('t').append(tr)})}
 </script></body></html>
