@@ -13,7 +13,7 @@ const { spawn } = require('child_process')
 
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')) } catch { return d } }
 const CFG = readJson(path.join(__dirname, 'config.json'), {})
-const DEF = { holdS: 4, releaseS: 2, pulls: 6, timeoutS: 40, regionW: 30, regionH: 8, regionY: 50, minPixels: 80, rodSlot: 1, baitSlot: 2, reactMs: 1000, ocrX: 0, ocrY: 55, ocrW: 35, ocrH: 20, tensionWord: 'spanning', autoEat: true, eatEveryMin: 35, eatCount: 5, drinkCount: 5, eatSlot: 5, drinkSlot: 4 }
+const DEF = { holdS: 4, releaseS: 2, pulls: 6, timeoutS: 40, regionW: 30, regionH: 8, regionY: 50, minPixels: 80, rodSlot: 1, baitSlot: 2, reactMs: 1000, ocrX: 0, ocrY: 55, ocrW: 35, ocrH: 20, tensionWord: 'spanning', biteWord: 'sla aan', biteX: 20, biteY: 28, biteW: 60, biteH: 22, autoEat: true, eatEveryMin: 35, eatCount: 5, drinkCount: 5, eatSlot: 5, drinkSlot: 4 }
 
 let win, running = false, testing = false, licensed = false
 let S = { ...DEF }, saved = { key: '', settings: {} }
@@ -143,8 +143,9 @@ const scan = (red) => new Promise(r => {
   setTimeout(() => { if (pending === r) { pending = null; r(0) } }, 2500)
 })
 // OCR van het meldingsgebied (standaard linksonder) — leest bv. "Veel spanning: laat de muisknop even los!"
-const ocr = () => new Promise(r => {
-  pendingO = r; send(`O ${S.ocrX} ${S.ocrY} ${S.ocrW} ${S.ocrH}`)
+const ocr = (rect) => new Promise(r => {
+  const [x, y, w, h] = rect || [S.ocrX, S.ocrY, S.ocrW, S.ocrH]
+  pendingO = r; send(`O ${x} ${y} ${w} ${h}`)
   setTimeout(() => { if (pendingO === r) { pendingO = null; r('') } }, 2500)
 })
 const key = (sc) => send('K ' + sc)           // scancode: 1 = 0x02, 2 = 0x03
@@ -165,10 +166,11 @@ async function cycle() {
   log('Uitwerpen');            await click(); await wait(500)
   if (!running) return
 
-  log('Wachten op groene balk…')
+  log('Wachten op de melding "Sla aan"…')
   const t0 = Date.now(); let hits = 0
   while (running && Date.now() - t0 < S.timeoutS * 1000) {
-    const n = await scan(); emit('meter', n)
+    const txt = (await ocr([S.biteX, S.biteY, S.biteW, S.biteH])).toLowerCase().replace(/[^a-z ]/g, '')
+    const n = txt.includes(String(S.biteWord).toLowerCase()) ? S.minPixels : 0; emit('meter', n)
     if (n >= S.minPixels) { if (++hits >= 2) break } else hits = 0   // 2x na elkaar = geen vals alarm
     await nap(30)
   }
@@ -205,7 +207,7 @@ async function test() {
   if (testing) { testing = false; return }
   try { await ensureWorker() } catch { return }
   testing = true; emit('state', 'testing')
-  while (testing) { emit('meter', await scan()); await nap(80) }
+  while (testing) { const t = await ocr([S.biteX, S.biteY, S.biteW, S.biteH]); emit('meter', t.toLowerCase().includes(String(S.biteWord).toLowerCase()) ? S.minPixels : 0); emit('log', 'OCR leest: ' + (t.trim().slice(0, 60) || '(niets)')); await nap(150) }
   emit('meter', 0); emit('state', 'stopped')
 }
 const toggle = () => (running ? stop() : start())
