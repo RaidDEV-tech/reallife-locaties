@@ -328,6 +328,7 @@ function createWindow() {
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false }
   })
   win.loadFile(path.join(__dirname, 'src', 'index.html'))
+  win.webContents.on('did-finish-load', () => { win.focus(); win.webContents.focus() })
   win.on('closed', () => { stop(); win = null })
 }
 app.whenReady().then(() => {
