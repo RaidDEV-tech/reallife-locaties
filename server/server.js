@@ -26,13 +26,19 @@ function verify(key, hwid) {
   if (!hwid || String(hwid).length < 32) return { ok: false, msg: 'Ongeldig apparaat' }
   if (!e.hwid) { e.hwid = hwid; e.activated = new Date().toISOString(); if (e.days && !e.expires) e.expires = new Date(Date.now() + e.days * 864e5).toISOString(); save() }
   else if (e.hwid !== hwid) return { ok: false, msg: 'Key is al in gebruik op een ander apparaat' }
-  return { ok: true, plan: e.plan, expires: e.expires, linked: !!e.discord, e }
+  return { ok: true, plan: e.plan, expires: e.expires, linked: !!(e.discord || e.nolink), e }
 }
 const pub = ({ e, ...r }) => r
 app.post('/api/activate', (q, r) => {
   const v = verify(q.body.key, q.body.hwid); if (!v.ok) return r.json(v)
   // al gekoppeld aan Discord? dan direct een sessie-token teruggeven (geen login nodig)
-  const out = pub(v); if (v.e.discord) out.token = session(v.e.discord, 'app'); r.json(out)
+  const out = pub(v), e = v.e
+  if (e.discord || e.nolink) {  // gekoppeld, of een speciale key zonder Discord
+    const uid = e.discord || 'key:' + e.key
+    db.users[uid] ||= { id: uid, name: 'Directe key', settings: {}, sUpdated: 0 }
+    out.token = session(uid, 'app')
+  }
+  r.json(out)
 })
 
 // ── Discord-koppeling ──
@@ -85,10 +91,10 @@ app.post('/api/admin/login', (q, r) => {
 const auth = (q, r, n) => (tokens.get(q.headers['x-token']) > Date.now() ? n() : r.status(401).json({ ok: false, msg: 'Niet ingelogd' }))
 app.get('/api/admin/keys', auth, (q, r) => r.json(db.keys.map(k => ({ ...k, discordName: db.users[k.discord]?.name }))))
 app.post('/api/admin/keys', auth, (q, r) => {
-  const { count = 1, plan = 'lifetime', days = 0, note = '' } = q.body, out = []
+  const { count = 1, plan = 'lifetime', days = 0, note = '', nolink = false } = q.body, out = []
   for (let i = 0; i < Math.min(+count || 1, 100); i++) {
     const key = [1, 2, 3, 4].map(() => crypto.randomBytes(2).toString('hex').toUpperCase()).join('-')
-    const e = { key, plan: String(plan).slice(0, 20), note: String(note).slice(0, 60), hwid: null, discord: null, banned: false, created: new Date().toISOString(), days: +days || 0, expires: null }
+    const e = { key, plan: String(plan).slice(0, 20), note: String(note).slice(0, 60), hwid: null, discord: null, nolink: !!nolink, banned: false, created: new Date().toISOString(), days: +days || 0, expires: null }
     db.keys.push(e); out.push(e)
   }
   save(); r.json(out)
