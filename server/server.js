@@ -5,9 +5,9 @@ const E = process.env
 const CFG = { port: E.PORT || 3000, admin: E.ADMIN_PASSWORD, base: (E.BASE_URL || 'http://localhost:3000').replace(/\/$/, ''), adminKeys: (E.ADMIN_KEYS || '').split(',').map(x => x.trim()).filter(Boolean), cid: E.DISCORD_CLIENT_ID, secret: E.DISCORD_CLIENT_SECRET }
 if (!CFG.admin) { console.error('Zet ADMIN_PASSWORD'); process.exit(1) }
 const DBF = E.DATA_FILE || path.join(__dirname, 'data.json')
-let db = fs.existsSync(DBF) ? JSON.parse(fs.readFileSync(DBF, 'utf8')) : {}
+let db = {}; try { if (fs.existsSync(DBF)) db = JSON.parse(fs.readFileSync(DBF, 'utf8')) } catch (e) { console.error('Lezen mislukt:', e.message) }
 db.keys ||= []; db.users ||= {}; db.sessions ||= {}
-const save = () => fs.writeFileSync(DBF, JSON.stringify(db, null, 2))
+const save = () => { try { fs.writeFileSync(DBF, JSON.stringify(db, null, 2)) } catch (e) { console.error('Opslaan mislukt:', e.message) } }
 const rnd = (n = 24) => crypto.randomBytes(n).toString('hex')
 const app = express(); app.set('trust proxy', 1); app.use(express.json())
 const PUB = path.join(__dirname, '..', 'website')
@@ -52,14 +52,16 @@ app.get('/auth/discord/callback', async (q, r) => {
   try {
     const tk = await (await fetch('https://discord.com/api/oauth2/token', { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: CFG.cid, client_secret: CFG.secret, grant_type: 'authorization_code', code: q.query.code, redirect_uri: CFG.base + '/auth/discord/callback' }) })).json()
     const d = await (await fetch('https://discord.com/api/users/@me', { headers: { authorization: 'Bearer ' + tk.access_token } })).json()
-    if (!tk.access_token) return r.status(400).send('Discord weigert de code: ' + (tk.error_description || tk.error))
-    if (!d.id) throw new Error('geen gebruiker ontvangen')    const u = db.users[d.id] ||= { id: d.id, settings: {}, sUpdated: 0 }; u.name = d.global_name || d.username; u.avatar = d.avatar
+    if (!tk.access_token) throw new Error('Discord weigert de code: ' + (tk.error_description || tk.error || JSON.stringify(tk)))
+    if (!d.id) throw new Error('Geen gebruiker ontvangen van Discord')
+    const u = db.users[d.id] ||= { id: d.id, settings: {}, sUpdated: 0 }; u.name = d.global_name || d.username; u.avatar = d.avatar
     const l = links.get(q.query.state)
     if (l) { const e = find(l.key); if (e) e.discord = d.id; l.token = session(d.id, 'app') }
     else if (!db.keys.some(k => k.discord === d.id)) { save(); return r.status(403).send('Geen licentie gekoppeld aan dit Discord-account. Activeer eerst een key in de loader.') }
     const t = session(d.id, 'web'); save()
     r.setHeader('Set-Cookie', `rl=${t}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`); r.redirect('/dashboard.html')
-  } catch (e) { r.status(400).send('Discord-login mislukt: ' + (e && e.message || e)) }})
+  } catch (e) { console.error('Discord callback:', e); r.status(400).send('Discord-login mislukt: ' + (e && e.message || e)) }
+})
 
 // ── Dashboard-API (web + app) ──
 app.get('/api/me', (q, r) => {
