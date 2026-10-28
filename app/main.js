@@ -13,7 +13,7 @@ const { spawn } = require('child_process')
 
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')) } catch { return d } }
 const CFG = readJson(path.join(__dirname, 'config.json'), {})
-const DEF = { holdS: 4, releaseS: 2, pulls: 6, timeoutS: 40, regionW: 30, regionH: 8, regionY: 50, minPixels: 80, rodSlot: 1, baitSlot: 2, reactMs: 1000, ocrX: 0, ocrY: 55, ocrW: 35, ocrH: 20, tensionWord: 'spanning', biteWord: 'sla aan', biteX: 35, biteY: 33, biteW: 30, biteH: 16, autoEat: true, eatEveryMin: 35, eatCount: 5, drinkCount: 5, eatSlot: 5, drinkSlot: 4 }
+const DEF = { holdS: 4, releaseS: 2, pulls: 6, timeoutS: 90, regionW: 30, regionH: 8, regionY: 50, minPixels: 80, rodSlot: 1, baitSlot: 2, reactMs: 1000, ocrX: 0, ocrY: 55, ocrW: 35, ocrH: 20, tensionWord: 'spanning', biteWord: 'sla aan', biteX: 35, biteY: 33, biteW: 30, biteH: 16, autoEat: true, eatEveryMin: 35, eatCount: 5, drinkCount: 5, eatSlot: 5, drinkSlot: 4 }
 
 let win, running = false, testing = false, licensed = false
 let S = { ...DEF }, saved = { key: '', settings: {} }
@@ -89,6 +89,7 @@ $asTask = ([System.WindowsRuntimeSystemExtensions].GetMethods() | ? { $_.Name -e
 function Aw($op, $t) { $n = $asTask.MakeGenericMethod($t).Invoke($null, @($op)); $n.Wait(-1) | Out-Null; $n.Result }
 $eng = [Windows.Media.Ocr.OcrEngine]::TryCreateFromUserProfileLanguages()
 function Ocr($p) {
+  if (-not $eng) { return '__NOOCR__' }
   try {
     $f = Aw ([Windows.Storage.StorageFile]::GetFileFromPathAsync($p)) ([Windows.Storage.StorageFile])
     $s = Aw ($f.OpenAsync([Windows.Storage.FileAccessMode]::Read)) ([Windows.Storage.Streams.IRandomAccessStream])
@@ -169,9 +170,11 @@ async function cycle() {
   if (!running) return
 
   log('Wachten op de melding "Sla aan"…')
-  const t0 = Date.now(); let hits = 0
+  const t0 = Date.now(); let hits = 0, dbg = 0
   while (running && Date.now() - t0 < S.timeoutS * 1000) {
     const txt = await ocr([S.biteX, S.biteY, S.biteW, S.biteH])
+    if (txt === '__NOOCR__') { log('Windows-OCR niet beschikbaar: voeg een taal toe (Instellingen > Tijd en taal > Taal en regio > Nederlands/Engels, met "tekstherkenning")'); running = false; break }
+    if (Date.now() - dbg > 8000) { dbg = Date.now(); log('OCR leest: ' + (txt.trim().slice(0, 50) || '(niets)')) }
     const n = isBite(txt) ? S.minPixels : 0; emit('meter', n)
     if (n >= S.minPixels) { if (++hits >= 2) break } else hits = 0   // 2x na elkaar = geen vals alarm
     await nap(30)
